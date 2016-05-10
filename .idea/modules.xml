@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MqttPainel.iml" filepath="$PROJECT_DIR$/MqttPainel.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mqtt-painel-android-kotlin.iml" filepath="$PROJECT_DIR$/mqtt-painel-android-kotlin.iml" />
     </modules>
   </component>
 </project>

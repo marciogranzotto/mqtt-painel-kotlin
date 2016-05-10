@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 23
@@ -34,6 +35,9 @@ buildscript {
 }
 repositories {
     mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-releases/"
+    }
 }
 
 dependencies {
@@ -41,6 +45,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.0.2'
-    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+    compile (group: 'org.eclipse.paho', name: 'org.eclipse.paho.android.service', version: '1.0.2') {
+        exclude module: 'support-v4'
+    }
 }
