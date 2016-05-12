@@ -1,9 +1,14 @@
 package com.granzotto.mqttpainel.models
 
-class SensorObj constructor(var topic: String?, var name: String?) {
-    var value: String? = null
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
+open class SensorObj constructor(@PrimaryKey open var topic: String = "", open var name: String = "", open var value: String? = null) : RealmObject() {
     override fun toString(): String {
         return "${name} (${topic}) = ${value}"
+    }
+
+    companion object {
+        val TOPIC = "topic"
     }
 }

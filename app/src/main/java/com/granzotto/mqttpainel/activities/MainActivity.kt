@@ -1,7 +1,6 @@
 package com.granzotto.mqttpainel.activities
 
 import android.os.Bundle
-import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import com.granzotto.mqttpainel.R
 import com.granzotto.mqttpainel.utils.ConnectionManager
@@ -10,11 +9,10 @@ import com.granzotto.mqttpainel.views.CustomProgressDialog
 import com.pawegio.kandroid.longToast
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.activity_main.*
-import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.IMqttActionListener
 import org.eclipse.paho.client.mqttv3.IMqttToken
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.jetbrains.anko.*
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -88,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                 longToast("Error connecting")
                 exception?.printStackTrace()
+                progressDialog.dismiss()
             }
 
         }

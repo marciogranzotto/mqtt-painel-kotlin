@@ -70,6 +70,7 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.2'
+    compile 'io.reactivex:rxkotlin:0.55.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.pawegio.kandroid:kandroid:0.6.2@aar'
     compile 'org.jetbrains.anko:anko-common:0.8.3'

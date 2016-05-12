@@ -17,7 +17,9 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun inflateCards() {
         val rootViewID = contentView.id;
-        supportFragmentManager.beginTransaction()
+        contentView.removeAllViews()
+
+        fragmentManager.beginTransaction()
                 .add(rootViewID, SensorsFragment(), SensorsFragment.TAG)
                 .commit()
     }

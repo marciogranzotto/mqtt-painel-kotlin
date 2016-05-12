@@ -27,6 +27,7 @@
                 android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/addButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:gravity="center"
@@ -43,6 +44,7 @@
             android:background="@color/black_54" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="@string/commons.linearlayoutmanager"
