@@ -22,13 +22,20 @@ class MainActivity : AppCompatActivity() {
 
     private var serverUrl: String? = ""
     private var serverPort: String? = ""
+    private var progressDialog: CustomProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setUpTextWatchers()
-        connectButton.setOnClickListener { a -> connect() }
+        connectButton.setOnClickListener { v -> connect() }
+
+        tryToReconnect()
+    }
+
+    private fun tryToReconnect() {
+        progressDialog = CustomProgressDialog.show(this)
 
         val prefs = getSharedPreferences(MyConstants.SHARED_PREFERENCES, MODE_PRIVATE)
         serverUrl = prefs.getString(MyConstants.SERVER_URL, "")
@@ -40,6 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         if (!serverUrl.isNullOrBlank() && !serverPort.isNullOrBlank())
             connect()
+        else
+            progressDialog?.dismiss()
     }
 
 
@@ -63,8 +72,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun connect() {
-        val progressDialog = CustomProgressDialog.show(this)
-
         val userName = etUser.text.toString()
         val password = etPassword.text.toString()
         ConnectionManager.setUp(serverUrl, serverPort, userName, password)
@@ -78,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 editor.putString(MyConstants.SERVER_USER_PASSWORD, password)
                 editor.commit()
                 toast("Connected")
-                progressDialog.dismiss()
+                progressDialog?.dismiss()
                 startActivity<DashboardActivity>()
                 finish()
             }
@@ -86,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                 longToast("Error connecting")
                 exception?.printStackTrace()
-                progressDialog.dismiss()
+                progressDialog?.dismiss()
             }
 
         }

@@ -15,13 +15,12 @@ import kotlinx.android.synthetic.main.sensor_cell.view.*
 
 class SensorCardAdapter(var items: RealmResults<SensorObj>) : RecyclerView.Adapter<SensorCardViewHolder>() {
 
-
     override fun getItemCount(): Int {
         return items.size
     }
 
     override fun onBindViewHolder(holder: SensorCardViewHolder?, position: Int) {
-        holder?.bindViewHolder(items.get(position))
+        holder?.bindViewHolder(items[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SensorCardViewHolder? {

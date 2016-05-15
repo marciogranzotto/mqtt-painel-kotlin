@@ -40,7 +40,7 @@
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text.big"
+            android:textSize="@dimen/text.medium"
             tools:text="100.00" />
 
     </LinearLayout>

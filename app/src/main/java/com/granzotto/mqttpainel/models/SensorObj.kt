@@ -9,6 +9,6 @@ open class SensorObj constructor(@PrimaryKey open var topic: String = "", open v
     }
 
     companion object {
-        val TOPIC = "topic"
+        val TOPIC: String = "topic"
     }
 }

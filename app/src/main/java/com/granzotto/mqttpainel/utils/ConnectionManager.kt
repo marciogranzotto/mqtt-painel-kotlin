@@ -2,6 +2,8 @@ package com.granzotto.mqttpainel.utils
 
 import android.content.Context
 import android.provider.Settings
+import com.pawegio.kandroid.d
+import com.pawegio.kandroid.e
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import java.util.*
@@ -46,11 +48,13 @@ object ConnectionManager {
             }
 
             override fun connectionLost(cause: Throwable?) {
-                //                textView.text = "Connection Lost!"
+                e("Connection lost!")
+                cause?.printStackTrace()
+                connect(appContext)
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                //                textView.text = "Delivery Complete!"
+                d("deliveryComplete: \n${token}")
             }
 
         })

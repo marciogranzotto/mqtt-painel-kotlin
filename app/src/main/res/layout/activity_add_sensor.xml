@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context="com.granzotto.mqttpainel.activities.DashboardActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
         android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/contentView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/tall_divider"
             android:orientation="vertical"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:showDividers="middle">
+            android:padding="16dp">
 
             <EditText
-                android:id="@+id/etServer"
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Server url"
-                android:inputType="textUri" />
+                android:layout_marginBottom="16dp"
+                android:hint="SENSOR NAME"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_50" />
 
             <EditText
-                android:id="@+id/etPort"
+                android:id="@+id/etTopic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Server port"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/etUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="User (optional)"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password (optional)"
-                android:inputType="textPassword" />
+                android:hint="TOPIC I.E.: /home/livingroom/temperature"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_50" />
 
             <View
                 android:layout_width="match_parent"
@@ -54,14 +45,13 @@
                 android:focusableInTouchMode="false" />
 
             <Button
-                android:id="@+id/connectButton"
+                android:id="@+id/addButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:text="Connect" />
-
-
+                android:text="Add Sensor" />
         </LinearLayout>
 
     </ScrollView>
-</LinearLayout>
+
+</FrameLayout>
