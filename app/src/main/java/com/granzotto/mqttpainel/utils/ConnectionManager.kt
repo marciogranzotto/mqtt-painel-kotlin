@@ -2,10 +2,11 @@ package com.granzotto.mqttpainel.utils
 
 import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import com.pawegio.kandroid.d
-import com.pawegio.kandroid.e
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
+import org.jetbrains.anko.toast
 import java.util.*
 
 object ConnectionManager {
@@ -33,7 +34,7 @@ object ConnectionManager {
 
         url = "${serverUrl}:${serverPort}"
 
-        client = MqttAndroidClient(appContext, url, Settings.Secure.ANDROID_ID);
+        client = MqttAndroidClient(appContext, url, Settings.Secure.ANDROID_ID + "-android");
         client?.registerResources(appContext)
         val options = MqttConnectOptions();
         options.userName = userName
@@ -48,9 +49,8 @@ object ConnectionManager {
             }
 
             override fun connectionLost(cause: Throwable?) {
-                e("Connection lost!")
-                cause?.printStackTrace()
-                connect(appContext)
+                Log.e("ConnectionManager", "Connection lost!", cause)
+                appContext.toast("Connection lost!")
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {

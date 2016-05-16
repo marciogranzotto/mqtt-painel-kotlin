@@ -66,5 +66,10 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
             ConnectionManager.client?.subscribe(it.topic, 0)
         }
     }
+
+    fun reloadSensors(results: RealmResults<SensorObj>) {
+        adapter = SensorCardAdapter(results)
+        recyclerView.adapter = adapter
+    }
 }
 

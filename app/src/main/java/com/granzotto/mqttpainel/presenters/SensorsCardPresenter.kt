@@ -17,6 +17,7 @@ class SensorsCardPresenter : RxPresenter<SensorsFragment>() {
     companion object {
         val SENSORS_REQUEST = 0
         val MESSAGE_RECIEVED = 1
+        val RELOAD_SENSORS = 2
     }
 
     private var realm: Realm? = null
@@ -33,6 +34,11 @@ class SensorsCardPresenter : RxPresenter<SensorsFragment>() {
                 { view, response -> view.onSensorsSuccess(response) },
                 { view, throwable -> e("Errow!\n${throwable.cause}") })
 
+        restartableLatestCache(RELOAD_SENSORS,
+                { queryForSensors()?.observeOn(AndroidSchedulers.mainThread()) },
+                { view, response -> view.reloadSensors(response) },
+                { view, throwable -> e("Errow!\n${throwable.cause}") })
+
         restartableLatestCache(MESSAGE_RECIEVED,
                 { queryForSpecificSensors(topic)?.observeOn(AndroidSchedulers.mainThread()) },
                 { view, response ->
@@ -43,7 +49,7 @@ class SensorsCardPresenter : RxPresenter<SensorsFragment>() {
                         i(it.toString())
                     }
                     realm?.commitTransaction()
-                    start(SENSORS_REQUEST)
+                    start(RELOAD_SENSORS)
                 },
                 { view, t ->
                     e("Something went wrong on realm!")
