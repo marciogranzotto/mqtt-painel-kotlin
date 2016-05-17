@@ -1,12 +1,17 @@
 package com.granzotto.mqttpainel.utils
 
 import android.content.Context
+import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import com.granzotto.mqttpainel.BuildConfig
+import com.granzotto.mqttpainel.activities.MainActivity
+import com.granzotto.mqttpainel.utils.extensions.flags
+import com.granzotto.mqttpainel.utils.extensions.start
 import com.pawegio.kandroid.d
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 import java.util.*
 
@@ -21,6 +26,8 @@ object ConnectionManager {
     var connectionListener: IMqttActionListener? = null
     var listeners: HashMap<String, MessageReceivedListener> = HashMap()
 
+    private var context: Context? = null
+
     fun setUp(serverUrl: String?, serverPort: String?, userName: String?, userPassword: String?) {
         this.serverUrl = serverUrl;
         this.serverPort = serverPort;
@@ -29,13 +36,15 @@ object ConnectionManager {
     }
 
     fun connect(appContext: Context) {
+        this.context = appContext
+
         var url: String;
         serverUrl = if (!serverUrl.isNullOrBlank() && serverUrl!!.contains("//")) serverUrl!! else
             "tcp://" + serverUrl
 
         url = "${serverUrl}:${serverPort}"
 
-        val clientID = Settings.Secure.getString(appContext.contentResolver, Settings.Secure.ANDROID_ID) + "-android";
+        val clientID = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID) + "-android";
 
         if (BuildConfig.DEBUG)
             d("clientID: ${clientID}")
@@ -57,7 +66,7 @@ object ConnectionManager {
             override fun connectionLost(cause: Throwable?) {
                 if (BuildConfig.DEBUG)
                     Log.e("ConnectionManager", "Connection lost!", cause)
-                appContext.toast("Connection lost!")
+                showConnectionLostDialog()
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
@@ -66,6 +75,18 @@ object ConnectionManager {
             }
 
         })
+    }
+
+    private fun showConnectionLostDialog() {
+        context?.alert("Connection Lost", "Do you want to reconnect to the broker?") {
+            positiveButton("Yes") { connect(context!!) }
+            negativeButton("No") {
+                val flags = flags(Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                val intent = Intent(context!!, MainActivity::class.java)
+                intent.flags = flags
+                context?.startActivity(intent)
+            }
+        }
     }
 
     fun addRecievedListener(listener: MessageReceivedListener, tag: String) {
