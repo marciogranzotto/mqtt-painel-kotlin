@@ -16,6 +16,6 @@ open class EquipmentObj constructor(@PrimaryKey open var topic: String = "", ope
     }
 
     fun getValueAsBoolean(): Boolean {
-        return value.equals("on", true) || value.equals("true", true)
+        return !value.isNullOrEmpty() && (value.equals("on", true) || value.equals("true", true))
     }
 }

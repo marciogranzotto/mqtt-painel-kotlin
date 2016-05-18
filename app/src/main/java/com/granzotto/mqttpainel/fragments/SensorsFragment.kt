@@ -62,7 +62,8 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
         adapter = SensorCardAdapter(results)
         recyclerView.adapter = adapter
 
-        results.forEach {
+        for (i in 0..results.lastIndex) {
+            val it = results[i]
             ConnectionManager.client?.subscribe(it.topic, 0)
         }
     }

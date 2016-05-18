@@ -7,12 +7,10 @@ import android.util.Log
 import com.granzotto.mqttpainel.BuildConfig
 import com.granzotto.mqttpainel.activities.MainActivity
 import com.granzotto.mqttpainel.utils.extensions.flags
-import com.granzotto.mqttpainel.utils.extensions.start
 import com.pawegio.kandroid.d
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.toast
 import java.util.*
 
 object ConnectionManager {

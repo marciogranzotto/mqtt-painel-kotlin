@@ -5,6 +5,7 @@ import com.granzotto.mqttpainel.BuildConfig
 import com.granzotto.mqttpainel.fragments.EquipmentsFragment
 import com.granzotto.mqttpainel.models.EquipmentObj
 import com.granzotto.mqttpainel.utils.ConnectionManager
+import com.pawegio.kandroid.d
 import com.pawegio.kandroid.e
 import com.pawegio.kandroid.i
 import io.realm.Realm
@@ -71,6 +72,10 @@ class EquipmentsCardPresenter : RxPresenter<EquipmentsFragment>() {
         return realm?.where(EquipmentObj::class.java)?.equalTo("topic", topic)?.findAll()?.asObservable()?.distinctUntilChanged()
     }
 
+    fun requestEquipments() {
+        start(EQUIPMENTS_REQUEST)
+    }
+
     fun messageRecieved(topic: String, message: MqttMessage?) {
         if (BuildConfig.DEBUG) i("Received: ${topic} = ${message.toString()}")
         this.topic = topic
@@ -79,6 +84,7 @@ class EquipmentsCardPresenter : RxPresenter<EquipmentsFragment>() {
     }
 
     fun stateChanged(equipment: EquipmentObj, state: Boolean) {
+        if (BuildConfig.DEBUG) d { "stateChanged on ${equipment.name}(${equipment.topic}) is now $state" }
         val message = if (state) MqttMessage("on".toByteArray()) else MqttMessage("off".toByteArray())
         message.qos = 1
         ConnectionManager.client?.publish(equipment.topic, message)

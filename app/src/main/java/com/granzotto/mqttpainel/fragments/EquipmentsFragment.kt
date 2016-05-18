@@ -14,6 +14,7 @@ import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.MessageReceivedListener
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_equipments.*
+import nucleus.factory.RequiresPresenter
 import nucleus.view.NucleusFragment
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.jetbrains.anko.startActivity
@@ -22,6 +23,7 @@ import org.jetbrains.anko.startActivity
  * Created by marciogranzotto on 5/17/16.
  */
 
+@RequiresPresenter(EquipmentsCardPresenter::class)
 class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageReceivedListener, EquipmentStateListener {
 
     companion object {
@@ -41,6 +43,8 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
         addButton.setOnClickListener { addButtonClicked() }
 
         ConnectionManager.addRecievedListener(this, TAG)
+
+        presenter.requestEquipments()
     }
 
     override fun onStop() {
