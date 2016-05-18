@@ -7,7 +7,7 @@ import com.granzotto.mqttpainel.BuildConfig
 import com.granzotto.mqttpainel.R
 import com.granzotto.mqttpainel.models.EquipmentObj
 import com.granzotto.mqttpainel.utils.extensions.inflate
-import com.pawegio.kandroid.d
+import com.pawegio.kandroid.i
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.equipment_cell.view.*
 
@@ -30,7 +30,9 @@ class EquipmentCardAdapter(var items: RealmResults<EquipmentObj>, val listener: 
 class EquipmentCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindViewHolder(equipmentObj: EquipmentObj, listener: EquipmentStateListener) {
+        i { "default alpha: ${itemView.alpha}" }
         itemView.stateSwitch.setOnCheckedChangeListener(null)
+        itemView.progressWheel.visibility = View.GONE
 
         itemView.title.text = equipmentObj.name
         itemView.subTitle.text = equipmentObj.topic
@@ -38,12 +40,13 @@ class EquipmentCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.stateSwitch.setOnCheckedChangeListener(
                 { v, isChecked ->
-                    if (BuildConfig.DEBUG) d { "State changed for ${equipmentObj.name}! Now it's $isChecked" }
+                    if (BuildConfig.DEBUG) i { "State changed for ${equipmentObj.name}! Now it's $isChecked" }
+                    itemView.progressWheel.visibility = View.VISIBLE
+                    itemView.progressWheel.spin()
                     listener.stateChanged(equipmentObj, isChecked)
                 }
         )
     }
-
 }
 
 interface EquipmentStateListener {

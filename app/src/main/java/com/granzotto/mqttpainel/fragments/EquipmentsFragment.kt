@@ -63,7 +63,7 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
     }
 
     fun reloadEquipments(response: RealmResults<EquipmentObj>) {
-        adapter?.items = response
+//        adapter?.items = response
         adapter?.notifyDataSetChanged()
     }
 

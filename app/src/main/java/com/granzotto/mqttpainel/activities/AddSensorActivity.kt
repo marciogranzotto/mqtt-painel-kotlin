@@ -19,15 +19,19 @@ class AddSensorActivity : AppCompatActivity() {
         setUpTextWatchers()
 
         addButton.setOnClickListener { v ->
-            ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
-            val realm = Realm.getDefaultInstance()
-            realm.beginTransaction()
-            val sensor = realm.createObject(SensorObj::class.java)
-            sensor.name = name!!
-            sensor.topic = topic!!
-            realm.commitTransaction()
-            finish()
+            addButtonClicked();
         }
+    }
+
+    private fun addButtonClicked() {
+        ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val sensor = realm.createObject(SensorObj::class.java)
+        sensor.name = name!!
+        sensor.topic = topic!!
+        realm.commitTransaction()
+        finish()
     }
 
     private var topic: String? = null

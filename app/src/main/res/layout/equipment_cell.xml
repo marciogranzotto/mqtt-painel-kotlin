@@ -1,47 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/clickableView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="9dp">
+        android:layout_height="wrap_content">
+
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/clickableView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="9dp">
 
-            <TextView
-                android:id="@+id/title"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text.medium_small"
+                    tools:text="Title" />
+
+                <TextView
+                    android:id="@+id/subTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text.small"
+                    tools:text="12/31/2016 11:30PM" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/stateSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text.medium_small"
-                tools:text="Title" />
-
-            <TextView
-                android:id="@+id/subTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text.small"
-                tools:text="12/31/2016 11:30PM" />
+                android:visibility="visible" />
 
         </LinearLayout>
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/stateSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/progressWheel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="-4.5dp"
+            android:visibility="gone"
+            app:matProg_barColor="@color/colorPrimary"
+            app:matProg_barWidth="4dp"
+            tools:visibility="visible" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
