@@ -1,6 +1,7 @@
 package com.granzotto.mqttpainel.presenters
 
 import android.os.Bundle
+import com.granzotto.mqttpainel.BuildConfig
 import com.granzotto.mqttpainel.fragments.SensorsFragment
 import com.granzotto.mqttpainel.models.SensorObj
 import com.pawegio.kandroid.e
@@ -71,7 +72,7 @@ class SensorsCardPresenter : RxPresenter<SensorsFragment>() {
     }
 
     fun messageReceived(topic: String, message: MqttMessage?) {
-        i("Received: ${topic} = ${message.toString()}")
+        if (BuildConfig.DEBUG) i("Received: ${topic} = ${message.toString()}")
         this.topic = topic
         this.message = message
         start(MESSAGE_RECIEVED)

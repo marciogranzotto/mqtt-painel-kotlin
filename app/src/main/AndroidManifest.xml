@@ -31,13 +31,12 @@
             android:name=".activities.DashboardActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.AddSensorActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".activities.AddEquipmentActivity"></activity>
     </application>
 
 </manifest>

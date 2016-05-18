@@ -3,6 +3,7 @@ package com.granzotto.mqttpainel.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.granzotto.mqttpainel.R
+import com.granzotto.mqttpainel.fragments.EquipmentsFragment
 import com.granzotto.mqttpainel.fragments.SensorsFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
@@ -21,6 +22,7 @@ class DashboardActivity : AppCompatActivity() {
 
         fragmentManager.beginTransaction()
                 .add(rootViewID, SensorsFragment(), SensorsFragment.TAG)
+                .add(rootViewID, EquipmentsFragment(), EquipmentsFragment.TAG)
                 .commit()
     }
 }
