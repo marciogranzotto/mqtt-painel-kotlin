@@ -68,8 +68,8 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
     }
 
     fun reloadSensors(results: RealmResults<SensorObj>) {
-        adapter = SensorCardAdapter(results)
-        recyclerView.adapter = adapter
+        adapter?.items = results
+        adapter?.notifyDataSetChanged()
     }
 }
 
