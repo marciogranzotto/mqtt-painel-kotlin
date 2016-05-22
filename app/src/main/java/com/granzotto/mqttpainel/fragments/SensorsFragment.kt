@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.granzotto.mqttpainel.R
-import com.granzotto.mqttpainel.activities.AddSensorActivity
+import com.granzotto.mqttpainel.activities.AddEditSensorActivity
 import com.granzotto.mqttpainel.adapters.SensorCardAdapter
+import com.granzotto.mqttpainel.adapters.SensorListener
 import com.granzotto.mqttpainel.models.SensorObj
 import com.granzotto.mqttpainel.presenters.SensorsCardPresenter
 import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.MessageReceivedListener
+import com.granzotto.mqttpainel.utils.ObjectParcer
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_sensors.*
 import nucleus.factory.RequiresPresenter
@@ -20,7 +22,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.jetbrains.anko.startActivity
 
 @RequiresPresenter(SensorsCardPresenter::class)
-class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceivedListener {
+class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceivedListener, SensorListener {
 
     companion object {
         val TAG = "SensorsFragment"
@@ -35,15 +37,13 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
 
     override fun onStart() {
         super.onStart()
-
         addButton.setOnClickListener { addButtonClicked() }
-
         ConnectionManager.addRecievedListener(this, TAG)
         presenter.requestSensors()
     }
 
     private fun addButtonClicked() {
-        startActivity<AddSensorActivity>()
+        startActivity<AddEditSensorActivity>()
     }
 
     override fun messageReceived(topic: String?, message: MqttMessage?) {
@@ -59,7 +59,7 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
 
 
     fun onSensorsSuccess(results: RealmResults<SensorObj>) {
-        adapter = SensorCardAdapter(results)
+        adapter = SensorCardAdapter(results, this)
         recyclerView.adapter = adapter
 
         for (i in 0..results.lastIndex) {
@@ -71,6 +71,11 @@ class SensorsFragment : NucleusFragment<SensorsCardPresenter>(), MessageReceived
     fun reloadSensors(results: RealmResults<SensorObj>) {
         adapter?.items = results
         adapter?.notifyDataSetChanged()
+    }
+
+    override fun onSensorClicked(sensor: SensorObj) {
+        ObjectParcer.putObject(AddEditSensorActivity.SENSOR, sensor)
+        startActivity<AddEditSensorActivity>()
     }
 }
 

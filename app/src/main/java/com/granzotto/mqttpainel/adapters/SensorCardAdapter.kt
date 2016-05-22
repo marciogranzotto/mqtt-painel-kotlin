@@ -13,14 +13,14 @@ import kotlinx.android.synthetic.main.sensor_cell.view.*
  * Created by marciogranzotto on 5/12/16.
  */
 
-class SensorCardAdapter(var items: RealmResults<SensorObj>) : RecyclerView.Adapter<SensorCardViewHolder>() {
+class SensorCardAdapter(var items: RealmResults<SensorObj>, val listener: SensorListener) : RecyclerView.Adapter<SensorCardViewHolder>() {
 
     override fun getItemCount(): Int {
         return items.size
     }
 
     override fun onBindViewHolder(holder: SensorCardViewHolder?, position: Int) {
-        holder?.bindViewHolder(items[position])
+        holder?.bindViewHolder(items[position], listener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SensorCardViewHolder? {
@@ -32,10 +32,14 @@ class SensorCardAdapter(var items: RealmResults<SensorObj>) : RecyclerView.Adapt
 
 class SensorCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bindViewHolder(sensor: SensorObj) {
+    fun bindViewHolder(sensor: SensorObj, listener: SensorListener) {
         itemView.title.text = sensor.name
         itemView.subTitle.text = sensor.topic
         itemView.value.text = sensor.value
+        itemView.setOnClickListener { listener.onSensorClicked(sensor) }
     }
+}
 
+interface SensorListener {
+    fun onSensorClicked(sensor: SensorObj)
 }

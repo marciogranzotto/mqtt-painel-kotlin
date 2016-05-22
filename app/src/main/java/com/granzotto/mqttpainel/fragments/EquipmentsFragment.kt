@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.granzotto.mqttpainel.R
-import com.granzotto.mqttpainel.activities.AddEquipmentActivity
+import com.granzotto.mqttpainel.activities.AddEditEquipmentActivity
 import com.granzotto.mqttpainel.adapters.EquipmentCardAdapter
 import com.granzotto.mqttpainel.adapters.EquipmentListener
 import com.granzotto.mqttpainel.models.EquipmentObj
@@ -52,7 +52,7 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
     }
 
     private fun addButtonClicked() {
-        startActivity<AddEquipmentActivity>()
+        startActivity<AddEditEquipmentActivity>()
     }
 
     override fun messageReceived(topic: String?, message: MqttMessage?) {
@@ -61,9 +61,9 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
         }
     }
 
-    override fun equipmentClicked(equipment: EquipmentObj) {
-        ObjectParcer.putObject(AddEquipmentActivity.EQUIPMENT, equipment)
-        startActivity<AddEquipmentActivity>()
+    override fun onEquipmentClicked(equipment: EquipmentObj) {
+        ObjectParcer.putObject(AddEditEquipmentActivity.EQUIPMENT, equipment)
+        startActivity<AddEditEquipmentActivity>()
     }
 
     fun reloadEquipments() {
@@ -79,7 +79,7 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
         }
     }
 
-    override fun stateChanged(equipment: EquipmentObj, state: Boolean) {
+    override fun onStateChanged(equipment: EquipmentObj, state: Boolean) {
         presenter.stateChanged(equipment, state)
     }
 }

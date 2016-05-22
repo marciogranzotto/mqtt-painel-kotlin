@@ -41,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:minHeight="16dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false" />
 
@@ -50,6 +51,22 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:text="Add Sensor" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
 
     </ScrollView>

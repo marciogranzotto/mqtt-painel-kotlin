@@ -4,74 +4,77 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.granzotto.mqttpainel.R
-import com.granzotto.mqttpainel.models.EquipmentObj
+import com.granzotto.mqttpainel.models.SensorObj
 import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.ObjectParcer
 import com.pawegio.kandroid.e
 import com.pawegio.kandroid.textWatcher
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_add_equipment.*
+import kotlinx.android.synthetic.main.activity_add_sensor.*
 
-class AddEquipmentActivity : AppCompatActivity() {
+class AddEditSensorActivity : AppCompatActivity() {
 
     companion object {
-        val EQUIPMENT = "edit_equipment"
+        val SENSOR = "edit_sensor"
     }
 
-    private var equipment: EquipmentObj? = null
+
     private var topic: String? = null
     private var name: String? = null
+    private var sensor: SensorObj? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_equipment)
+        setContentView(R.layout.activity_add_sensor)
         setUpTextWatchers()
 
-        equipment = ObjectParcer.getObject(EQUIPMENT) as EquipmentObj?
+        sensor = ObjectParcer.getObject(SENSOR) as SensorObj?
 
-        if (equipment == null) {
-            addButton.setOnClickListener { addEquipment() }
-
+        if (sensor == null) {
+            addButton.setOnClickListener { addSensor() }
             addButton.visibility = View.VISIBLE
-            deleteButton.visibility = View.GONE
             saveButton.visibility = View.GONE
+            deleteButton.visibility = View.GONE
         } else {
+            saveButton.setOnClickListener { editSensor() }
+            deleteButton.setOnClickListener { deleteSensor() }
             addButton.visibility = View.GONE
-            deleteButton.visibility = View.VISIBLE
             saveButton.visibility = View.VISIBLE
+            deleteButton.visibility = View.VISIBLE
 
-            deleteButton.setOnClickListener { deleteEquipment() }
-            saveButton.setOnClickListener { editEquipment() }
-
-            etName.setText(equipment?.name)
-            etTopic.setText(equipment?.topic)
+            etName.setText(sensor?.name)
+            etTopic.setText(sensor?.topic)
         }
     }
 
-    private fun editEquipment() {
+    private fun deleteSensor() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        if (topic != null) equipment?.topic = topic!!
-        if (name != null) equipment?.name = name!!
+        sensor?.removeFromRealm()
         realm.commitTransaction()
         finish()
     }
 
-    private fun deleteEquipment() {
+    private fun editSensor() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        equipment?.removeFromRealm()
+        if (topic != null && topic != sensor?.topic) {
+            sensor?.topic = topic!!
+            sensor?.value = null
+            ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
+        }
+        if (name != null) sensor?.name = name!!
         realm.commitTransaction()
         finish()
     }
 
-    private fun addEquipment() {
+    private fun addSensor() {
         ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val equip = realm.createObject(EquipmentObj::class.java)
-        equip.name = name!!
-        equip.topic = topic!!
+        val sensor = realm.createObject(SensorObj::class.java)
+        sensor.name = name!!
+        sensor.topic = topic!!
         realm.commitTransaction()
         finish()
     }

@@ -43,16 +43,16 @@ class EquipmentCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
                     if (BuildConfig.DEBUG) i { "State changed for ${equipmentObj.name}! Now it's $isChecked" }
                     itemView.progressWheel.visibility = View.VISIBLE
                     itemView.progressWheel.spin()
-                    listener.stateChanged(equipmentObj, isChecked)
+                    listener.onStateChanged(equipmentObj, isChecked)
                 }
         )
 
-        itemView.setOnClickListener { listener.equipmentClicked(equipmentObj) }
+        itemView.setOnClickListener { listener.onEquipmentClicked(equipmentObj) }
     }
 }
 
 interface EquipmentListener {
-    fun stateChanged(equipment: EquipmentObj, state: Boolean)
+    fun onStateChanged(equipment: EquipmentObj, state: Boolean)
 
-    fun equipmentClicked(equipment: EquipmentObj)
+    fun onEquipmentClicked(equipment: EquipmentObj)
 }

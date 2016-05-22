@@ -32,12 +32,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AddSensorActivity"
+            android:name=".activities.AddEditSensorActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AddEquipmentActivity"
+            android:name=".activities.AddEditEquipmentActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".activities.DashboardActivity"
             android:screenOrientation="portrait" />
