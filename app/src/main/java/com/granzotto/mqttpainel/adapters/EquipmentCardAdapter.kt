@@ -11,7 +11,7 @@ import com.pawegio.kandroid.i
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.equipment_cell.view.*
 
-class EquipmentCardAdapter(var items: RealmResults<EquipmentObj>, val listener: EquipmentStateListener) : RecyclerView.Adapter<EquipmentCardViewHolder>() {
+class EquipmentCardAdapter(var items: RealmResults<EquipmentObj>, val listener: EquipmentListener) : RecyclerView.Adapter<EquipmentCardViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): EquipmentCardViewHolder? {
         val v = inflate(R.layout.equipment_cell, parent)
         return EquipmentCardViewHolder(v)
@@ -29,7 +29,7 @@ class EquipmentCardAdapter(var items: RealmResults<EquipmentObj>, val listener: 
 
 class EquipmentCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bindViewHolder(equipmentObj: EquipmentObj, listener: EquipmentStateListener) {
+    fun bindViewHolder(equipmentObj: EquipmentObj, listener: EquipmentListener) {
         i { "default alpha: ${itemView.alpha}" }
         itemView.stateSwitch.setOnCheckedChangeListener(null)
         itemView.progressWheel.visibility = View.GONE
@@ -46,9 +46,13 @@ class EquipmentCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
                     listener.stateChanged(equipmentObj, isChecked)
                 }
         )
+
+        itemView.setOnClickListener { listener.equipmentClicked(equipmentObj) }
     }
 }
 
-interface EquipmentStateListener {
+interface EquipmentListener {
     fun stateChanged(equipment: EquipmentObj, state: Boolean)
+
+    fun equipmentClicked(equipment: EquipmentObj)
 }

@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import com.granzotto.mqttpainel.R
 import com.granzotto.mqttpainel.activities.AddEquipmentActivity
 import com.granzotto.mqttpainel.adapters.EquipmentCardAdapter
-import com.granzotto.mqttpainel.adapters.EquipmentStateListener
+import com.granzotto.mqttpainel.adapters.EquipmentListener
 import com.granzotto.mqttpainel.models.EquipmentObj
 import com.granzotto.mqttpainel.presenters.EquipmentsCardPresenter
 import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.MessageReceivedListener
+import com.granzotto.mqttpainel.utils.ObjectParcer
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_equipments.*
 import nucleus.factory.RequiresPresenter
@@ -19,12 +20,13 @@ import nucleus.view.NucleusFragment
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.jetbrains.anko.startActivity
 
-/**
+/**import org.jetbrains.anko.startActivity
+
  * Created by marciogranzotto on 5/17/16.
  */
 
 @RequiresPresenter(EquipmentsCardPresenter::class)
-class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageReceivedListener, EquipmentStateListener {
+class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageReceivedListener, EquipmentListener {
 
     companion object {
         val TAG = "EquipmentsFragment"
@@ -39,11 +41,8 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
 
     override fun onStart() {
         super.onStart()
-
         addButton.setOnClickListener { addButtonClicked() }
-
         ConnectionManager.addRecievedListener(this, TAG)
-
         presenter.requestEquipments()
     }
 
@@ -60,6 +59,11 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
         if (topic != null) {
             presenter.messageRecieved(topic, message)
         }
+    }
+
+    override fun equipmentClicked(equipment: EquipmentObj) {
+        ObjectParcer.putObject(AddEquipmentActivity.EQUIPMENT, equipment)
+        startActivity<AddEquipmentActivity>()
     }
 
     fun reloadEquipments() {

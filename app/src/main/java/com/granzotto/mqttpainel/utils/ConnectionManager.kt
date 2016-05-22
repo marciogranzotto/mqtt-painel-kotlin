@@ -11,6 +11,7 @@ import com.pawegio.kandroid.d
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.longToast
 import java.util.*
 
 object ConnectionManager {
@@ -36,7 +37,7 @@ object ConnectionManager {
     fun connect(appContext: Context) {
         this.context = appContext
 
-        if(serverUrl.isNullOrBlank() || serverPort.isNullOrBlank())
+        if (serverUrl.isNullOrBlank() || serverPort.isNullOrBlank())
             return
 
         var url: String;
@@ -79,7 +80,7 @@ object ConnectionManager {
     }
 
     private fun showConnectionLostDialog() {
-        context?.alert("Connection Lost", "Do you want to reconnect to the broker?") {
+        val alert = context?.alert("Connection Lost", "Do you want to reconnect to the broker?") {
             positiveButton("Yes") { connect(context!!) }
             negativeButton("No") {
                 val flags = flags(Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -87,6 +88,12 @@ object ConnectionManager {
                 intent.flags = flags
                 context?.startActivity(intent)
             }
+        }
+        try {
+            alert?.show();
+        } catch (e: Exception) {
+            e.printStackTrace()
+            context?.longToast("Connection lost!")
         }
     }
 
