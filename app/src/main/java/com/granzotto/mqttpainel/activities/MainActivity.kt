@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
         setUpTextWatchers()
         connectButton.setOnClickListener { v -> connect() }
 
-        tryToReconnect()
+        getDataFromSharedPreferences()
     }
 
-    private fun tryToReconnect() {
+    private fun getDataFromSharedPreferences() {
         progressDialog = CustomProgressDialog.show(this)
 
         val prefs = getSharedPreferences(MyConstants.SHARED_PREFERENCES, MODE_PRIVATE)

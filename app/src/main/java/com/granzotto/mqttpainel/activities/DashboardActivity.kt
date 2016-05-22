@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import com.granzotto.mqttpainel.R
 import com.granzotto.mqttpainel.fragments.EquipmentsFragment
 import com.granzotto.mqttpainel.fragments.SensorsFragment
+import com.granzotto.mqttpainel.utils.ConnectionManager
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : AppCompatActivity() {
@@ -14,6 +15,14 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
 
         inflateCards();
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (!(ConnectionManager.client?.isConnected ?: false)) {
+            //Disconnected!!
+            ConnectionManager.connect(applicationContext)
+        }
     }
 
     private fun inflateCards() {

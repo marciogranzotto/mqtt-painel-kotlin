@@ -23,7 +23,6 @@ class EquipmentsCardPresenter : RxPresenter<EquipmentsFragment>() {
     companion object {
         val EQUIPMENTS_REQUEST = 0
         val MESSAGE_RECIEVED = 1
-        val RELOAD_EQUIPMENTS = 2
     }
 
     private var realm: Realm? = null
@@ -40,11 +39,6 @@ class EquipmentsCardPresenter : RxPresenter<EquipmentsFragment>() {
                 { view, response -> view.onEquipmentsSuccess(response) },
                 { view, throwable -> e("Errow!\n${throwable.cause}") })
 
-        restartableLatestCache(RELOAD_EQUIPMENTS,
-                { queryForEquipments()?.observeOn(AndroidSchedulers.mainThread()) },
-                { view, response -> view.reloadEquipments(response) },
-                { view, throwable -> e("Errow!\n${throwable.cause}") })
-
         restartableLatestCache(MESSAGE_RECIEVED,
                 { queryForSpecificEquipments(topic)?.observeOn(AndroidSchedulers.mainThread()) },
                 { view, response ->
@@ -55,7 +49,7 @@ class EquipmentsCardPresenter : RxPresenter<EquipmentsFragment>() {
                         i(it.toString())
                     }
                     realm?.commitTransaction()
-                    start(RELOAD_EQUIPMENTS)
+                    view.reloadEquipments()
                 },
                 { view, t ->
                     e("Something went wrong on realm!")

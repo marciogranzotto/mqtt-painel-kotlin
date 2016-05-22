@@ -36,6 +36,9 @@ object ConnectionManager {
     fun connect(appContext: Context) {
         this.context = appContext
 
+        if(serverUrl.isNullOrBlank() || serverPort.isNullOrBlank())
+            return
+
         var url: String;
         serverUrl = if (!serverUrl.isNullOrBlank() && serverUrl!!.contains("//")) serverUrl!! else
             "tcp://" + serverUrl
