@@ -64,7 +64,7 @@ class AddEditEquipmentActivity : AppCompatActivity() {
     private fun deleteEquipment() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        equipment?.removeFromRealm()
+        equipment?.deleteFromRealm()
         realm.commitTransaction()
         finish()
     }
@@ -73,9 +73,8 @@ class AddEditEquipmentActivity : AppCompatActivity() {
         ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val equip = realm.createObject(EquipmentObj::class.java)
+        val equip = realm.createObject(EquipmentObj::class.java, topic!!)
         equip.name = name!!
-        equip.topic = topic!!
         realm.commitTransaction()
         finish()
     }

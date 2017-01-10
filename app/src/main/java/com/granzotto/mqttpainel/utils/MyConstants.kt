@@ -8,7 +8,7 @@ class MyConstants {
         val SERVER_PORT = "server_port"
         val SERVER_USER = "server_user"
         val SERVER_USER_PASSWORD = "server_password"
-        val SCHEMA_VERSION: Long = 0
+        val SCHEMA_VERSION: Long = 1
     }
 
 }

@@ -50,7 +50,7 @@ class AddEditSensorActivity : AppCompatActivity() {
     private fun deleteSensor() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        sensor?.removeFromRealm()
+        sensor?.deleteFromRealm()
         realm.commitTransaction()
         finish()
     }
@@ -72,9 +72,8 @@ class AddEditSensorActivity : AppCompatActivity() {
         ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val sensor = realm.createObject(SensorObj::class.java)
+        val sensor = realm.createObject(SensorObj::class.java, topic!!)
         sensor.name = name!!
-        sensor.topic = topic!!
         realm.commitTransaction()
         finish()
     }

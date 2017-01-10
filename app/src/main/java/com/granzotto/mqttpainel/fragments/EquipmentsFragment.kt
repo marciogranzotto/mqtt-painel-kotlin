@@ -1,5 +1,6 @@
 package com.granzotto.mqttpainel.fragments
 
+import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,6 @@ import com.granzotto.mqttpainel.utils.MessageReceivedListener
 import com.granzotto.mqttpainel.utils.ObjectParcer
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_equipments.*
-import nucleus.factory.RequiresPresenter
-import nucleus.view.NucleusFragment
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.jetbrains.anko.startActivity
 
@@ -25,14 +24,14 @@ import org.jetbrains.anko.startActivity
  * Created by marciogranzotto on 5/17/16.
  */
 
-@RequiresPresenter(EquipmentsCardPresenter::class)
-class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageReceivedListener, EquipmentListener {
+class EquipmentsFragment : Fragment(), MessageReceivedListener, EquipmentListener {
 
     companion object {
         val TAG = "EquipmentsFragment"
     }
 
     var adapter: EquipmentCardAdapter? = null
+    var presenter = EquipmentsCardPresenter(this)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -49,6 +48,11 @@ class EquipmentsFragment : NucleusFragment<EquipmentsCardPresenter>(), MessageRe
     override fun onStop() {
         ConnectionManager.removeRecievedListener(TAG)
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
     }
 
     private fun addButtonClicked() {

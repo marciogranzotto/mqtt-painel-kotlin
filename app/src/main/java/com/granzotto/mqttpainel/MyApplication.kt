@@ -13,11 +13,12 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val realmConfiguration = RealmConfiguration.Builder(this)
+        Realm.init(this)
+        val realmConfiguration = RealmConfiguration.Builder()
                 .schemaVersion(MyConstants.SCHEMA_VERSION)
                 .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(realmConfiguration);
+                .build()
+        Realm.setDefaultConfiguration(realmConfiguration)
     }
 
 }
