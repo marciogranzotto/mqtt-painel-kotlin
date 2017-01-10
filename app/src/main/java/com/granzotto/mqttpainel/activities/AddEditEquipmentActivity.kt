@@ -52,9 +52,10 @@ class AddEditEquipmentActivity : AppCompatActivity() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         if (topic != null && topic != equipment?.topic) {
-            equipment?.topic = topic!!
-            equipment?.value = null
-            ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
+            equipment?.deleteFromRealm()
+            realm.commitTransaction()
+            addEquipment()
+            return
         }
         if (name != null) equipment?.name = name!!
         realm.commitTransaction()

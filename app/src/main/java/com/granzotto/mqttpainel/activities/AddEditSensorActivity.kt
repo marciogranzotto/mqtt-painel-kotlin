@@ -5,9 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.granzotto.mqttpainel.R
 import com.granzotto.mqttpainel.models.SensorObj
-import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.ObjectParcer
-import com.pawegio.kandroid.e
 import com.pawegio.kandroid.textWatcher
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_add_sensor.*
@@ -59,9 +57,10 @@ class AddEditSensorActivity : AppCompatActivity() {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         if (topic != null && topic != sensor?.topic) {
-            sensor?.topic = topic!!
-            sensor?.value = null
-            ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
+            sensor?.deleteFromRealm()
+            realm.commitTransaction()
+            addSensor()
+            return
         }
         if (name != null) sensor?.name = name!!
         realm.commitTransaction()
@@ -69,7 +68,6 @@ class AddEditSensorActivity : AppCompatActivity() {
     }
 
     private fun addSensor() {
-        ConnectionManager.client?.subscribe(topic, 0) ?: e("Error subscribing to topic")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         val sensor = realm.createObject(SensorObj::class.java, topic!!)
