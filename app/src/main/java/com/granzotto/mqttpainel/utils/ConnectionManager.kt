@@ -40,11 +40,10 @@ object ConnectionManager {
         if (serverUrl.isNullOrBlank() || serverPort.isNullOrBlank())
             return
 
-        var url: String;
         serverUrl = if (!serverUrl.isNullOrBlank() && serverUrl!!.contains("//")) serverUrl!! else
             "tcp://" + serverUrl
 
-        url = "${serverUrl}:${serverPort}"
+        val url: String = "${serverUrl}:${serverPort}";
 
         val clientID = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID) + "-android";
 
@@ -77,6 +76,10 @@ object ConnectionManager {
             }
 
         })
+    }
+
+    fun disconnect() {
+        client?.disconnect()
     }
 
     private fun showConnectionLostDialog() {

@@ -1,3 +1,4 @@
 <resources>
     <string name="commons.linearlayoutmanager">android.support.v7.widget.LinearLayoutManager</string>
+    <string name="disconnect">Disconnect</string>
 </resources>

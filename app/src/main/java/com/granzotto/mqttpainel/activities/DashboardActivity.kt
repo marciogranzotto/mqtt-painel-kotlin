@@ -1,37 +1,52 @@
 package com.granzotto.mqttpainel.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.os.Parcelable
+import android.view.Menu
+import android.view.MenuItem
 import com.granzotto.mqttpainel.R
-import com.granzotto.mqttpainel.fragments.EquipmentsFragment
-import com.granzotto.mqttpainel.fragments.SensorsFragment
-import com.granzotto.mqttpainel.utils.ConnectionManager
-import kotlinx.android.synthetic.main.activity_dashboard.*
+import com.granzotto.mqttpainel.presenters.DashboardPresenter
+import org.jetbrains.anko.startActivity
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : BaseActivity() {
+
+    var presenter: DashboardPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        presenter = DashboardPresenter(this)
+        presenter?.onCreate()
+    }
 
-        inflateCards();
+    override fun onDestroy() {
+        presenter?.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.dashboard_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.menu_disconnect) {
+            presenter?.onDisconnectOptionItemSelected()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onRestart() {
         super.onRestart()
-        if (!(ConnectionManager.client?.isConnected ?: false)) {
-            //Disconnected!!
-            ConnectionManager.connect(applicationContext)
-        }
+        presenter?.onRestart()
     }
 
-    private fun inflateCards() {
-        val rootViewID = contentView.id;
-        contentView.removeAllViews()
-
-        fragmentManager.beginTransaction()
-                .add(rootViewID, SensorsFragment(), SensorsFragment.TAG)
-                .add(rootViewID, EquipmentsFragment(), EquipmentsFragment.TAG)
-                .commit()
+    fun goToMainActivity(extra: Parcelable?) {
+        if (extra != null)
+            startActivity<MainActivity>(MainActivity.CONNECTION_OBJ to extra)
+        else
+            startActivity<MainActivity>()
+        finish()
     }
 }
