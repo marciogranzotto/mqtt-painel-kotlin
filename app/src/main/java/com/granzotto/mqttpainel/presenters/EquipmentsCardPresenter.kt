@@ -33,9 +33,9 @@ class EquipmentsCardPresenter constructor(var view: EquipmentsFragment?) {
                 doOnNext {
                     realm?.beginTransaction()
                     for (i in 0..it.lastIndex) {
-                        val it = it[i]
-                        it.value = message.toString()
-                        i(it.toString())
+                        val equip = it[i]
+                        equip.value = message.toString()
+                        i(equip.toString())
                     }
                     realm?.commitTransaction()
                     view?.reloadEquipments()
