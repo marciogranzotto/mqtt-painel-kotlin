@@ -5,7 +5,7 @@
     tools:context=".activities.DashboardActivity">
     <item
         android:id="@+id/menu_disconnect"
-        android:icon="@drawable/round_progress_background"
+        android:icon="@drawable/ic_cloud_outline_off"
         android:orderInCategory="1"
         android:title="@string/disconnect"
         app:showAsAction="always" />
