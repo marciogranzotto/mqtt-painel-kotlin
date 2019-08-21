@@ -6,9 +6,9 @@ import com.granzotto.mqttpainel.models.EquipmentObj
 import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.pawegio.kandroid.d
 import com.pawegio.kandroid.i
+import io.reactivex.disposables.CompositeDisposable
 import io.realm.Realm
 import org.eclipse.paho.client.mqttv3.MqttMessage
-import rx.lang.kotlin.onError
 
 /**
  * Created by marciogranzotto on 5/17/16.
@@ -16,31 +16,39 @@ import rx.lang.kotlin.onError
 class EquipmentsCardPresenter constructor(var view: EquipmentsFragment?) {
 
     private var realm = Realm.getDefaultInstance()
+    private var compositeDisposable = CompositeDisposable()
 
     fun onDestroy() {
         view = null
+        compositeDisposable.clear()
     }
 
     fun requestEquipments() {
-        realm?.where(EquipmentObj::class.java)?.findAll()?.asObservable()?.distinctUntilChanged()?.
-                doOnNext { view?.onEquipmentsSuccess(it) }?.onError { it.printStackTrace() }?.
-                subscribe()
+        realm?.where(EquipmentObj::class.java)?.findAllAsync()?.asFlowable()
+                ?.distinctUntilChanged()
+                ?.subscribe({
+                    view?.onEquipmentsSuccess(it)
+                }, {
+                    it.printStackTrace()
+                })?.let { compositeDisposable.add(it) }
     }
 
-    fun messageRecieved(topic: String, message: MqttMessage?) {
-        if (BuildConfig.DEBUG) i("Received: ${topic} = ${message.toString()}")
-        realm?.where(EquipmentObj::class.java)?.equalTo("topic", topic)?.findAll()?.asObservable()?.distinctUntilChanged()?.
-                doOnNext {
+    fun messageReceived(topic: String, message: MqttMessage?) {
+        if (BuildConfig.DEBUG) i("Received: $topic = ${message.toString()}")
+        realm?.where(EquipmentObj::class.java)?.equalTo("topic", topic)?.findAll()
+                ?.asFlowable()
+                ?.distinctUntilChanged()
+                ?.subscribe({ results ->
                     realm?.beginTransaction()
-                    for (i in 0..it.lastIndex) {
-                        val equip = it[i]
-                        equip.value = message.toString()
+                    results.forEach { equip ->
+                        equip?.value = message.toString()
                         i(equip.toString())
                     }
                     realm?.commitTransaction()
                     view?.reloadEquipments()
-                }?.onError { it.printStackTrace() }?.
-                subscribe()
+                }, {
+                    it.printStackTrace()
+                })?.let { compositeDisposable.add(it) }
     }
 
     fun stateChanged(equipment: EquipmentObj, state: Boolean) {

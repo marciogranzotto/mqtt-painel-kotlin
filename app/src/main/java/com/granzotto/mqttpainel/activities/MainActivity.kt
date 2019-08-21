@@ -8,10 +8,10 @@ import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 
-class MainActivity : BaseActivity() {
+class MainActivity: BaseActivity() {
 
     companion object {
-        val CONNECTION_OBJ = "connection_object"
+        const val CONNECTION_OBJ = "connection_object"
     }
 
     private var presenter: MainPresenter? = null
@@ -21,7 +21,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         presenter = MainPresenter(this)
         setUpTextWatchers()
-        connectButton.setOnClickListener { v -> presenter?.onConnectButtonClicked() }
+        connectButton.setOnClickListener { presenter?.onConnectButtonClicked() }
         presenter?.onIntentExtras(intent?.extras?.getParcelable<ConnectionObj>(CONNECTION_OBJ))
         presenter?.onCreate()
     }
