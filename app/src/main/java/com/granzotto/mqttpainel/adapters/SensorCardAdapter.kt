@@ -17,26 +17,26 @@ import kotlinx.android.synthetic.main.sensor_cell.view.*
  * Created by marciogranzotto on 5/12/16.
  */
 
-class SensorCardAdapter(var items: RealmResults<SensorObj>, val listener: SensorListener) : RecyclerView.Adapter<SensorCardViewHolder>() {
+class SensorCardAdapter(var items: RealmResults<SensorObj>, private val listener: SensorListener): RecyclerView.Adapter<SensorCardViewHolder>() {
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun onBindViewHolder(holder: SensorCardViewHolder?, position: Int) {
-        holder?.bindViewHolder(items[position], listener)
+    override fun onBindViewHolder(holder: SensorCardViewHolder, position: Int) {
+        items[position]?.let { holder.bindViewHolder(it, listener) }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SensorCardViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SensorCardViewHolder {
         val v = inflate(R.layout.sensor_cell, parent)
         return SensorCardViewHolder(v)
     }
 
 }
 
-class SensorCardViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+class SensorCardViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
-    val accentColor = ContextCompat.getColor(view.context, R.color.colorAccent);
+    private val accentColor = ContextCompat.getColor(view.context, R.color.colorAccent);
 
     fun bindViewHolder(sensor: SensorObj, listener: SensorListener) {
         itemView.title.text = sensor.name

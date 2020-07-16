@@ -1,14 +1,16 @@
 package com.granzotto.mqttpainel.presenters
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import com.granzotto.mqttpainel.activities.MainActivity
 import com.granzotto.mqttpainel.models.ConnectionObj
+import com.granzotto.mqttpainel.utils.ConnectionListener
 import com.granzotto.mqttpainel.utils.ConnectionManager
 import com.granzotto.mqttpainel.utils.MyConstants
+import com.granzotto.mqttpainel.utils.extensions.flags
 import com.pawegio.kandroid.longToast
 import kotlinx.android.synthetic.main.activity_main.*
-import org.eclipse.paho.client.mqttv3.IMqttActionListener
-import org.eclipse.paho.client.mqttv3.IMqttToken
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 /**
@@ -43,8 +45,7 @@ class MainPresenter(var view: MainActivity?) {
         view?.connectButton?.isEnabled = !serverUrl.isNullOrEmpty() && !serverPort.isNullOrEmpty()
     }
 
-
-    fun getDataFromSharedPreferences() {
+    private fun getDataFromSharedPreferences() {
         view?.showProgressDialog()
 
         val prefs = view?.getSharedPreferences(MyConstants.SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
@@ -54,7 +55,8 @@ class MainPresenter(var view: MainActivity?) {
         view?.etPort?.setText(serverPort ?: "1883")
         user = prefs?.getString(MyConstants.SERVER_USER, null) ?: oldConnectObject?.user
         view?.etUser?.setText(user)
-        password = prefs?.getString(MyConstants.SERVER_USER_PASSWORD, null) ?: oldConnectObject?.password
+        password = prefs?.getString(MyConstants.SERVER_USER_PASSWORD, null)
+                ?: oldConnectObject?.password
         view?.etPassword?.setText(password)
 
         if (oldConnectObject == null && !serverUrl.isNullOrBlank() && !serverPort.isNullOrBlank())
@@ -77,20 +79,23 @@ class MainPresenter(var view: MainActivity?) {
         val userName = view?.etUser?.text.toString()
         val password = view?.etPassword?.text.toString()
         ConnectionManager.setUp(serverUrl, serverPort, userName, password)
-        ConnectionManager.connectionListener = object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
+        ConnectionManager.connectionListener = object: ConnectionListener {
+            override fun onConnected() {
                 saveDataToSharedPreferences(userName, password)
                 view?.toast("Connected")
                 view?.dismissProgressDialog()
                 view?.goToDashboardScreen()
             }
 
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+            override fun onConnectionError(exception: Throwable?) {
                 view?.longToast("Error connecting")
                 exception?.printStackTrace()
                 view?.dismissProgressDialog()
             }
 
+            override fun onConnectionLost() {
+                showConnectionLostDialog()
+            }
         }
         if (view == null) return
         ConnectionManager.connect(view!!.applicationContext)
@@ -108,6 +113,25 @@ class MainPresenter(var view: MainActivity?) {
 
     fun onIntentExtras(parcelable: ConnectionObj?) {
         oldConnectObject = parcelable
+    }
+
+    private fun showConnectionLostDialog() {
+        val activity = view ?: return
+        val alert = view?.alert("Connection Lost", "Do you want to reconnect to the broker?") {
+            positiveButton("Yes") { ConnectionManager.connect(activity) }
+            negativeButton("No") {
+                val flags = flags(Intent.FLAG_ACTIVITY_NEW_TASK, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.flags = flags
+                activity.startActivity(intent)
+            }
+        }
+        try {
+            alert?.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            activity.longToast("Connection lost!")
+        }
     }
 
 }

@@ -22,15 +22,15 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.jetbrains.anko.startActivity
 import java.util.*
 
-class SensorsFragment : Fragment(), MessageReceivedListener, SensorListener {
+class SensorsFragment: Fragment(), MessageReceivedListener, SensorListener {
 
     companion object {
-        val TAG = "SensorsFragment"
+        const val TAG = "SensorsFragment"
     }
 
-    var adapter: SensorCardAdapter? = null
-    var presenter = SensorsCardPresenter(this)
-    var subscribed = HashMap<String, IMqttToken?>()
+    private var adapter: SensorCardAdapter? = null
+    private var presenter = SensorsCardPresenter(this)
+    private var subscribed = HashMap<String, IMqttToken?>()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,7 +40,7 @@ class SensorsFragment : Fragment(), MessageReceivedListener, SensorListener {
     override fun onStart() {
         super.onStart()
         addButton.setOnClickListener { addButtonClicked() }
-        ConnectionManager.addRecievedListener(this, TAG)
+        ConnectionManager.addReceivedListener(this, TAG)
         presenter.requestSensors()
     }
 
@@ -60,7 +60,7 @@ class SensorsFragment : Fragment(), MessageReceivedListener, SensorListener {
     }
 
     override fun onStop() {
-        ConnectionManager.removeRecievedListener(SensorsFragment.TAG)
+        ConnectionManager.removeReceivedListener(TAG)
         super.onStop()
     }
 
@@ -69,14 +69,12 @@ class SensorsFragment : Fragment(), MessageReceivedListener, SensorListener {
         adapter = SensorCardAdapter(results, this)
         recyclerView.adapter = adapter
 
-        (0..results.lastIndex)
-                .map { results[it] }
-                .forEach({
-                    if (!subscribed.containsKey(it.topic)) {
-                        val token = ConnectionManager.client?.subscribe(it.topic, 0)
-                        subscribed.put(it.topic, token)
-                    }
-                })
+        results.forEach {
+            if (!subscribed.containsKey(it.topic)) {
+                val token = ConnectionManager.client?.subscribe(it.topic, 0)
+                subscribed[it.topic] = token
+            }
+        }
     }
 
     fun reloadSensors(results: RealmResults<SensorObj>) {

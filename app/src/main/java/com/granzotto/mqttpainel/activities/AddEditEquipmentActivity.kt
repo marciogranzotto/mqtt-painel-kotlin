@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_add_equipment.*
 class AddEditEquipmentActivity : AppCompatActivity() {
 
     companion object {
-        val EQUIPMENT = "edit_equipment"
+        const val EQUIPMENT = "edit_equipment"
     }
 
     private var equipment: EquipmentObj? = null

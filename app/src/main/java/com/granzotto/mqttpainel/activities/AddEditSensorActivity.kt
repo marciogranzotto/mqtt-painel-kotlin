@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_add_sensor.*
 class AddEditSensorActivity : AppCompatActivity() {
 
     companion object {
-        val SENSOR = "edit_sensor"
+        const val SENSOR = "edit_sensor"
     }
 
 

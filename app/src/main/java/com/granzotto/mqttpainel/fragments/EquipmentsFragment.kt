@@ -41,12 +41,12 @@ class EquipmentsFragment : Fragment(), MessageReceivedListener, EquipmentListene
     override fun onStart() {
         super.onStart()
         addButton.setOnClickListener { addButtonClicked() }
-        ConnectionManager.addRecievedListener(this, TAG)
+        ConnectionManager.addReceivedListener(this, TAG)
         presenter.requestEquipments()
     }
 
     override fun onStop() {
-        ConnectionManager.removeRecievedListener(TAG)
+        ConnectionManager.removeReceivedListener(TAG)
         super.onStop()
     }
 
@@ -61,7 +61,7 @@ class EquipmentsFragment : Fragment(), MessageReceivedListener, EquipmentListene
 
     override fun messageReceived(topic: String?, message: MqttMessage?) {
         if (topic != null) {
-            presenter.messageRecieved(topic, message)
+            presenter.messageReceived(topic, message)
         }
     }
 
